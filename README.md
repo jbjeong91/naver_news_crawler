@@ -10,5 +10,9 @@
 ~~~
 python main.py
 ~~~
+## Results
+  ![ex_screenshot](./img/use.PNG)
+  ![ex_screenshot](./img/csv.PNG)
+  
 ## reference
 - https://bumcrush.tistory.com/155
