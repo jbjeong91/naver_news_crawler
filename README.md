@@ -7,9 +7,14 @@
 
 - CSV 형태로 수집된 파일 도출
 ## How to use
-~~~
-python main.py
-~~~
+- 제목 및 기사의 원본 수집
+  ~~~
+  python main.py
+  ~~~
+- 전처리된 제목 및 기사 수집
+  ~~~
+  python main.py --clean
+  ~~~
 ## Results
 - 검색 조건 입력
 
@@ -17,7 +22,17 @@ python main.py
   
 - 크롤링 결과
 
-  ![ex_screenshot](./img/csv.PNG)
+  ~~~
+  python main.py
+  ~~~    
+  
+  ![ex_screenshot](./img/csv1.PNG)
+  
+  ~~~
+  python main.py --clean
+  ~~~    
+  
+  ![ex_screenshot](./img/csv2.PNG)
   
 ## reference
 - https://bumcrush.tistory.com/155
