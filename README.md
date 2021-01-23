@@ -13,7 +13,7 @@ python main.py
 ## Results
 - 검색 조건 입력
 
-  
+  ![ex_screenshot](./img/use.PNG)
   
 - 크롤링 결과
 
