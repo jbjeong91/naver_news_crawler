@@ -5,7 +5,7 @@ import pandas as pd
 from datetime import datetime
 import csv
 
-RESULT_PATH = './result/'
+RESULT_PATH = './'
 
 def get_news(n_url):
     news_detail = []
@@ -45,7 +45,7 @@ def crawler(maxpage, query, s_date, e_date):
     e_to = e_date.replace(".", "")
     page = 1
     maxpage_t = (int(maxpage) - 1) * 10 + 1  # 11= 2페이지 21=3페이지 31=4페이지  ...81=9페이지 , 91=10페이지, 101=11페이지
-    f = open("./result/contents_text.csv", 'w', newline='')
+    f = open("./contents_text.csv", 'w', newline='')
     w = csv.writer(f)
     w.writerow(['years', 'company', 'title', 'contents', 'link'])
 
@@ -71,26 +71,6 @@ def crawler(maxpage, query, s_date, e_date):
 
     f.close()
 
-
-def excel_make():
-    data = pd.read_csv(RESULT_PATH + 'contents_text.txt', sep='\t', header=None, error_bad_lines=False)
-    data.columns = ['years', 'company', 'title', 'contents', 'link']
-
-    xlsx_outputFileName = 'result.xlsx'
-    # xlsx_name = 'result' + '.xlsx'
-    data.to_excel(excel_writer=RESULT_PATH + xlsx_outputFileName)
-
-def make_csv():
-    f_r = open(RESULT_PATH + 'contents_text.txt', 'r', encoding='utf8')
-    f_w = open(RESULT_PATH + 'new_data.csv', 'w', newline='')
-    w = csv.writer(f_w)
-    w.writerow(['years', 'company', 'title', 'contents', 'link'])
-    for line in f_r:
-        line = line.split(sep='\t')
-        print(line)
-        w.writerow(line)
-    f_r.close()
-    f_w.close()
 
 def main():
     maxpage = input("최대 출력할 페이지수 입력하시오: ")
