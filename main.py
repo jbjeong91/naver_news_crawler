@@ -73,10 +73,10 @@ def crawler(maxpage, query, s_date, e_date):
 
 
 def main():
-    maxpage = input("최대 출력할 페이지수 입력하시오: ")
-    query = input("검색어 입력: ")
-    s_date = input("시작날짜 입력(2021.01.01):")
-    e_date = input("끝날짜 입력(2021.01.23):")
+    maxpage = input("검색 최대 출력 페이지수: ")
+    query = input("검색어: ")
+    s_date = input("시작날짜[2021.01.01]:")
+    e_date = input("끝날짜[2021.01.23]:")
     crawler(maxpage, query, s_date, e_date)
 
 main()
