@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 from datetime import datetime
 import csv
-
+from tqdm import tqdm
 RESULT_PATH = './'
 
 def get_news(n_url):
@@ -40,14 +40,14 @@ def get_news(n_url):
 def crawler(maxpage, query, s_date, e_date):
     s_from = s_date.replace(".", "")
     e_to = e_date.replace(".", "")
-    page = 1
-    maxpage_t = (int(maxpage) - 1) * 10 + 1  # 11= 2페이지 21=3페이지 31=4페이지  ...81=9페이지 , 91=10페이지, 101=11페이지
+    start_page = 1
     f = open("./contents_text.csv", 'w', newline='')
     w = csv.writer(f)
     w.writerow(['years', 'company', 'title', 'contents', 'link'])
 
-    while page < maxpage_t:
-        print('page_num:',page)
+    #while page < maxpage_t:
+    for page in tqdm(range(start_page,int(maxpage)+1)):
+        page *= 5 #중복 방지를 위해 5페이지씩 텀을 둠
         url = "https://search.naver.com/search.naver?where=news&query=" + query + "&sort=0&ds=" + s_date + "&de=" + e_date + "&nso=so%3Ar%2Cp%3Afrom" + s_from + "to" + e_to + "%2Ca%3A&start=" + str(
             page)
 
@@ -62,18 +62,19 @@ def crawler(maxpage, query, s_date, e_date):
                     news_detail = get_news(urls["href"])
                     w.writerow([news_detail[1], news_detail[4], news_detail[0], news_detail[2],news_detail[3]])  # new style
                 except Exception as e:
-                    print(e)
+                    #print(e)
                     continue
-        page += 10
 
     f.close()
 
 
 def main():
-    maxpage = input("검색 최대 출력 페이지수: ")
+    maxpage = input("최대 검색 페이지수: ")
     query = input("검색어: ")
     s_date = input("시작날짜[2021.01.01]:")
     e_date = input("끝날짜[2021.01.23]:")
     crawler(maxpage, query, s_date, e_date)
+
+    print('Crawling complete')
 
 main()
