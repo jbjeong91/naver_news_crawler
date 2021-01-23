@@ -12,13 +12,10 @@ def get_news(n_url):
 
     # 안티크롤링 우회를 위한 추가 headers={'User-Agent':'Mozilla/5.0'}
     breq = requests.get(n_url, headers={'User-Agent':'Mozilla/5.0'})
-    print('jeong:',breq)
     bsoup = BeautifulSoup(breq.content, 'html.parser')
-    print('get_news_bsoup:',bsoup)
 
     # 기사 제목
     title = bsoup.select('h3#articleTitle')[0].text  # 대괄호는  h3#articleTitle 인 것중 첫번째 그룹만 가져오겠다.
-    print('jeong title:',title)
     news_detail.append(title)
 
     pdate = bsoup.select('.t11')[0].get_text()[:11]
