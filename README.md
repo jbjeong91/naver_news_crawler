@@ -37,3 +37,4 @@
 ## reference
 - https://bumcrush.tistory.com/155
 - https://data-newbie.tistory.com/210
+- https://book.coalastudy.com/data_crawling/week3/stage3
