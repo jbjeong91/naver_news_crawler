@@ -13,6 +13,7 @@ python main.py
 ## Results
 - 검색 조건 입력
   > 검색 최대 출력 페이지수: 5
+  
   > 검색어: 코로나
 
   ![ex_screenshot](./img/use.PNG)
