@@ -4,6 +4,11 @@ from bs4 import BeautifulSoup
 import csv
 from tqdm import tqdm
 import re
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--clean', action='store_true', default=False, help='for training')
+args = parser.parse_args()
 
 RESULT_PATH = './'
 
@@ -19,6 +24,7 @@ def get_news(n_url):
     title = bsoup.select('h3#articleTitle')[0].text  # 대괄호는  h3#articleTitle 인 것중 첫번째 그룹만 가져오겠다.
     news_detail.append(title)
 
+    # 날짜
     pdate = bsoup.select('.t11')[0].get_text()[:11]
     news_detail.append(pdate)
 
@@ -30,15 +36,18 @@ def get_news(n_url):
     #print('jeong',trash)
 
     for des in img_desc:
-        _text = _text.replace(des.text,"")
+        _text = _text.replace(des.text," ")
     for t in trash:
-        _text = _text.replace(t.text,"")
+        _text = _text.replace(t.text," ")
 
     #-------------------------------------
     btext = _text.replace("// flash 오류를 우회하기 위한 함수 추가 function _flash_removeCallback() {}", "")
     news_detail.append(btext.strip())
+
+    # url
     news_detail.append(n_url)
     pcompany = bsoup.select('#footer address')[0].a.get_text()
+    # 신문사
     news_detail.append(pcompany)
 
     return news_detail
@@ -46,13 +55,35 @@ def get_news(n_url):
 def clean_text(text):
     # 이메일 제거
     pattern = '([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)'
-    text = re.sub(pattern=pattern, repl='', string=text)
+    text = re.sub(pattern=pattern, repl=' ', string=text)
     # 괄호 글자 제거
     pattern = r'\([^)]*\)'
-    text = re.sub(pattern=pattern, repl='', string=text)
+    text = re.sub(pattern=pattern, repl=' ', string=text)
     # 중괄호
     pattern = r'\[[^)]*\]'
-    text = re.sub(pattern=pattern, repl='', string=text)
+    text = re.sub(pattern=pattern, repl=' ', string=text)
+    # 따옴표
+    text = re.sub('"', ' ', text)  # 쌍따옴표 " 제거
+    text = re.sub("'", ' ', text)  # 쌍따옴표 " 제거
+
+    # 'ooo기자 =' & '= ooo기자' 제거
+    simbol = text.find("=")
+    if simbol != -1:
+        if simbol < len(text)/2:
+            text = text[simbol+1:]
+        else:
+            text = text[:simbol]
+
+    simbol = text.find("▶")
+    if simbol != -1:
+        if simbol < len(text)/2:
+            text = text[simbol+1:]
+        else:
+            text = text[:simbol]
+
+    text = text.replace('.','. ')
+    text = text.replace('…', ' … ')
+
     # 양끝 공백 제거
     text = text.strip()
     # 공백 정리
@@ -83,8 +114,11 @@ def crawler(maxpage, query, s_date, e_date):
             if urls["href"].startswith("https://news.naver.com"):
                 try:
                     news_detail = get_news(urls["href"])
-                    # 1:data, 2:company, 3:title, 4:contents, 5:url
-                    w.writerow([news_detail[1], news_detail[4], clean_text(news_detail[0]), clean_text(news_detail[2]), news_detail[3]])  # new style
+                    # 0:title, 1:date, 2:contents, 3:url, 4:company
+                    if args.clean:
+                        w.writerow([news_detail[1], news_detail[4], clean_text(news_detail[0]), clean_text(news_detail[2]), news_detail[3]])  # new style
+                    else:
+                        w.writerow([news_detail[1], news_detail[4], news_detail[0], news_detail[2], news_detail[3]])  # new style
                 except Exception as e:
                     #print(e)
                     continue
