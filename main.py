@@ -125,7 +125,7 @@ def crawler(maxpage, query, s_date, e_date):
                         line = [news_detail[1], news_detail[4], news_detail[0], news_detail[2], news_detail[3]]
                     # 중복방지
                     if news_detail[0] not in temp_titles:
-                        temp_titles.append(news_detail[1])
+                        temp_titles.append(news_detail[0])
                         w.writerow(line)  # new style
                 except Exception as e:
                     print(e)
