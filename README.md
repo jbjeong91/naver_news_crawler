@@ -18,7 +18,7 @@
 ## Results
 - 검색 조건 입력
 
-  ![ex_screenshot](./img/cmd_.PNG)
+  ![ex_screenshot](./img/cmd_new.PNG)
   
 - 크롤링 결과
 
@@ -26,13 +26,13 @@
   python main.py
   ~~~    
   
-  ![ex_screenshot](./img/csv1.PNG)
+  ![ex_screenshot](./img/csv1_new.PNG)
   
   ~~~
   python main.py --clean
   ~~~    
   
-  ![ex_screenshot](./img/csv2.PNG)
+  ![ex_screenshot](./img/csv2_new.PNG)
   
 ## reference
 - https://bumcrush.tistory.com/155
