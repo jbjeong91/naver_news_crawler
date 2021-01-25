@@ -100,10 +100,10 @@ def crawler(maxpage, query, s_date, e_date):
     w = csv.writer(f)
     w.writerow(['years', 'company', 'title', 'contents', 'link'])
 
-    for page in tqdm(range(start_page,int(maxpage)+1)):
-        page *= 5 #중복 방지를 위해 5페이지씩 텀을 둠
-        url = "https://search.naver.com/search.naver?where=news&query=" + query + "&sort=0&ds=" + s_date + "&de=" + e_date + "&nso=so%3Ar%2Cp%3Afrom" + s_from + "to" + e_to + "%2Ca%3A&start=" + str(
-            page)
+    cnt = 0
+    for page in tqdm(range(start_page,int(maxpage),10)):
+        #&photo=3 : 지면기사만 다룸
+        url = "https://search.naver.com/search.naver?where=news&query=" + query + "&sort=0&photo=3&ds=" + s_date + "&de=" + e_date + "&nso=so%3Ar%2Cp%3Afrom" + s_from + "to" + e_to + "%2Ca%3A&start=" + str(page)
 
         req = requests.get(url)
         cont = req.content
@@ -122,7 +122,6 @@ def crawler(maxpage, query, s_date, e_date):
                 except Exception as e:
                     #print(e)
                     continue
-
     f.close()
 
 
