@@ -100,27 +100,35 @@ def crawler(maxpage, query, s_date, e_date):
     w = csv.writer(f)
     w.writerow(['years', 'company', 'title', 'contents', 'link'])
 
-    cnt = 0
+    temp_titles = []
     for page in tqdm(range(start_page,int(maxpage),10)):
-        #&photo=3 : 지면기사만 다룸
-        url = "https://search.naver.com/search.naver?where=news&query=" + query + "&sort=0&photo=3&ds=" + s_date + "&de=" + e_date + "&nso=so%3Ar%2Cp%3Afrom" + s_from + "to" + e_to + "%2Ca%3A&start=" + str(page)
+        #url = "https://search.naver.com/search.naver?where=news&query=" + query + "&sort=0&ds=" + s_date + "&de=" + e_date + "&nso=so%3Ar%2Cp%3Afrom" + s_from + "to" + e_to + "%2Ca%3A&start=" + str(page)
+        url = "https://search.naver.com/search.naver?where=news&query=" + query + "&sm=tab_pge&sort=0&photo=0&field=0&reporter_article=&pd=3&ds=" + s_date + "&de=" + e_date + "&docid=&nso=so:r,p:from" + s_from + "to" + e_to + ",a:all&mynews=0&start=" + str(
+            page)+'&refresh_start=0'
 
         req = requests.get(url)
         cont = req.content
         soup = BeautifulSoup(cont, 'html.parser')
-
         #for urls in soup.select("a._sp_each_url"):
-        for urls in soup.select('.info_group > a'):
+        #for urls in soup.select('.info_group > a'):
+        for idx, urls in enumerate(soup.select('a.info')):
             if urls["href"].startswith("https://news.naver.com"):
+                #print(urls['href'])
                 try:
                     news_detail = get_news(urls["href"])
+                    #print('jeong',idx)
+                    #print(news_detail[0])
                     # 0:title, 1:date, 2:contents, 3:url, 4:company
                     if args.clean:
-                        w.writerow([news_detail[1], news_detail[4], clean_text(news_detail[0]), clean_text(news_detail[2]), news_detail[3]])  # new style
+                        line = [news_detail[1], news_detail[4], clean_text(news_detail[0]), clean_text(news_detail[2]), news_detail[3]]
                     else:
-                        w.writerow([news_detail[1], news_detail[4], news_detail[0], news_detail[2], news_detail[3]])  # new style
+                        line = [news_detail[1], news_detail[4], news_detail[0], news_detail[2], news_detail[3]]
+                    # 중복방지
+                    if news_detail[0] not in temp_titles:
+                        temp_titles.append(news_detail[1])
+                        w.writerow(line)  # new style
                 except Exception as e:
-                    #print(e)
+                    print(e)
                     continue
     f.close()
 
