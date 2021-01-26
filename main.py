@@ -25,7 +25,7 @@ def get_news(n_url):
     news_detail.append(title)
 
     # 날짜
-    pdate = bsoup.select('.t11')[0].get_text()[:11]
+    pdate = bsoup.select('.t11')[0].text[:11]
     news_detail.append(pdate)
 
     # 기사 내용
@@ -46,8 +46,10 @@ def get_news(n_url):
 
     # url
     news_detail.append(n_url)
-    pcompany = bsoup.select('#footer address')[0].a.get_text()
+
     # 신문사
+    #pcompany = bsoup.select('#footer address')[0].a.get_text()
+    pcompany = bsoup.find('meta',property='me2:category1')['content']
     news_detail.append(pcompany)
 
     return news_detail
@@ -81,7 +83,7 @@ def clean_text(text):
         else:
             text = text[:simbol]
 
-    text = text.replace('.','. ')
+    #text = text.replace('.','. ')
     text = text.replace('…', ' … ')
 
     # 양끝 공백 제거
@@ -96,7 +98,7 @@ def crawler(maxpage, query, s_date, e_date):
     s_from = s_date.replace(".", "")
     e_to = e_date.replace(".", "")
     start_page = 1
-    f = open("./contents_text.csv", 'w', newline='')
+    f = open("./contents_text.csv", 'w', newline='', encoding='utf8')
     w = csv.writer(f)
     w.writerow(['years', 'company', 'title', 'contents', 'link'])
 
