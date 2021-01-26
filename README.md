@@ -1,7 +1,7 @@
 # naver_news_crawler
 
 ## Notes
-- 네이버 뉴스를 크롤링 하는 코드
+- BeautifulSoup을 활용한 네이버 뉴스 크롤링
 
 - 안티크롤링 해결 및 기사내용 전처리 추가
 
