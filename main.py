@@ -26,20 +26,23 @@ def get_news(n_url):
 
     # 날짜
     pdate = bsoup.select('.t11')[0].text[:11]
+
     news_detail.append(pdate)
 
     # 기사 내용
     _text = bsoup.select('#articleBodyContents')[0].text.replace('\n', " ")
     #-------------------------------------
-    img_desc = bsoup.select('.img_desc')
-    trash = bsoup.select('#articleBodyContents')[0].select('a')
-    #print('jeong',trash)
+    try:
+        img_desc = bsoup.select('.img_desc')
+        trash = bsoup.select('#articleBodyContents')[0].select('a')
+        #print('jeong',trash)
 
-    for des in img_desc:
-        _text = _text.replace(des.text," ")
-    for t in trash:
-        _text = _text.replace(t.text," ")
-
+        for des in img_desc:
+            _text = _text.replace(des.text," ")
+        for t in trash:
+            _text = _text.replace(t.text," ")
+    except:
+        pass
     #-------------------------------------
     btext = _text.replace("// flash 오류를 우회하기 위한 함수 추가 function _flash_removeCallback() {}", "")
     news_detail.append(btext.strip())
@@ -131,7 +134,8 @@ def crawler(maxpage, query, s_date, e_date):
                         w.writerow(line)  # new style
                 except Exception as e:
                     #print(e)
-                    continue
+                    pass
+
     f.close()
 
 
