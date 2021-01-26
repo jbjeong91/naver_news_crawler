@@ -130,7 +130,7 @@ def crawler(maxpage, query, s_date, e_date):
                         temp_titles.append(news_detail[0])
                         w.writerow(line)  # new style
                 except Exception as e:
-                    print(e)
+                    #print(e)
                     continue
     f.close()
 
