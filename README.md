@@ -38,3 +38,5 @@
 - https://bumcrush.tistory.com/155
 - https://data-newbie.tistory.com/210
 - https://book.coalastudy.com/data_crawling/week3/stage3
+- csv(utf-8) 파일 excel로 열기
+  https://www.lesstif.com/life/ms-excel-utf-8-csv-54952504.html
