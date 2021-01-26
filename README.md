@@ -11,7 +11,7 @@
   ~~~
   python main.py
   ~~~
-- 전처리된 제목 및 기사 수집
+- 정제된 제목 및 기사 수집
   ~~~
   python main.py --clean
   ~~~
