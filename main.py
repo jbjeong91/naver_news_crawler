@@ -18,31 +18,28 @@ def get_news(n_url):
     # 안티크롤링 우회를 위한 추가 headers={'User-Agent':'Mozilla/5.0'}
     breq = requests.get(n_url, headers={'User-Agent':'Mozilla/5.0'})
     bsoup = BeautifulSoup(breq.content, 'html.parser')
-    #print('정체크',bsoup)
 
     # 기사 제목
-    title = bsoup.select('h3#articleTitle')[0].text  # 대괄호는  h3#articleTitle 인 것중 첫번째 그룹만 가져오겠다.
+    #title = bsoup.select('h3#articleTitle')[0].text  # 대괄호는  h3#articleTitle 인 것중 첫번째 그룹만 가져오겠다.
+    title = bsoup.find('title').text[:-9]
+    #print(title)
     news_detail.append(title)
 
     # 날짜
-    pdate = bsoup.select('.t11')[0].text[:11]
-
+    pdate = bsoup.select('.t11')[0].text
     news_detail.append(pdate)
 
     # 기사 내용
     _text = bsoup.select('#articleBodyContents')[0].text.replace('\n', " ")
     #-------------------------------------
-    try:
-        img_desc = bsoup.select('.img_desc')
-        trash = bsoup.select('#articleBodyContents')[0].select('a')
-        #print('jeong',trash)
+    img_desc = bsoup.select('.img_desc')
+    trash = bsoup.select('#articleBodyContents')[0].select('a')
+    #print('jeong',trash)
 
-        for des in img_desc:
-            _text = _text.replace(des.text," ")
-        for t in trash:
-            _text = _text.replace(t.text," ")
-    except:
-        pass
+    for des in img_desc:
+        _text = _text.replace(des.text," ")
+    for t in trash:
+        _text = _text.replace(t.text," ")
     #-------------------------------------
     btext = _text.replace("// flash 오류를 우회하기 위한 함수 추가 function _flash_removeCallback() {}", "")
     news_detail.append(btext.strip())
@@ -121,6 +118,8 @@ def crawler(maxpage, query, s_date, e_date):
                 #print(urls['href'])
                 try:
                     news_detail = get_news(urls["href"])
+                    title = news_detail[0]
+    
                     #print('jeong',idx)
                     #print(news_detail[0])
                     # 0:title, 1:date, 2:contents, 3:url, 4:company
@@ -128,13 +127,14 @@ def crawler(maxpage, query, s_date, e_date):
                         line = [news_detail[1], news_detail[4], clean_text(news_detail[0]), clean_text(news_detail[2]), news_detail[3]]
                     else:
                         line = [news_detail[1], news_detail[4], news_detail[0], news_detail[2], news_detail[3]]
+    
                     # 중복방지
-                    if news_detail[0] not in temp_titles:
-                        temp_titles.append(news_detail[0])
+                    if title not in temp_titles:
+                        temp_titles.append(title)
                         w.writerow(line)  # new style
                 except Exception as e:
-                    #print(e)
-                    pass
+                    print(e)
+                    #pass
 
     f.close()
 
